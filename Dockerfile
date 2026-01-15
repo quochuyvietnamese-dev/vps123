@@ -1,13 +1,12 @@
-FROM ubuntu:22.04
+FROM python:3.8-slim
 
-ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && \
-    apt-get install -y tmate tzdata expect && \
-    ln -fs /usr/share/zoneinfo/Asia/Kathmandu /etc/localtime && \
-    dpkg-reconfigure -f noninteractive tzdata && \
-    apt-get clean
+WORKDIR /app
 
-COPY start.sh /start.sh
-RUN chmod +x /start.sh
+RUN pip install --no-cache-dir jupyterlab
 
-CMD ["/start.sh"]
+ENV PORT=8080
+
+EXPOSE 8080
+
+# Shell form to expand $PORT
+CMD jupyter lab --ip=0.0.0.0 --port=${PORT} --no-browser --allow-root
